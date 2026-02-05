@@ -15,39 +15,37 @@ export default function App() {
     containerRef.current.appendChild(renderer.domElement)
     //geometry
     //material 
-    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const geometry = new THREE.SphereGeometry(2, 32, 32);
     const material = new THREE.MeshStandardMaterial({
-      color: 0xff9900,
+      color: 0xFFFF0080,
       emissive: 0xff5500,
-      emissiveIntensity: 0.5
+      emissiveIntensity: 6, 
     });
     //sun 
     const sun = new THREE.Mesh(geometry, material)
     scene.add(sun)
+    //star
     function createStars() {
-      const starGeometry = new THREE.BufferGeometry(0.1, 5, 0, Math.PI * 2)
       const starCount = 1000
 
-      const positions = new Float32Array(starCount * 3)
+      // geometry + material for one star
+      const starGeometry = new THREE.SphereGeometry(0.2, 8, 8)
+      const starMaterial = new THREE.MeshBasicMaterial({ color: 0xffec9c })
 
-      for (let i = 0; i < starCount * 3; i++) {
-        positions[i] = (Math.random() - 0.5) * 200
+      for (let i = 0; i < starCount; i++) {
+        const star = new THREE.Mesh(starGeometry, starMaterial)
+
+        // random position in space
+        star.position.x = (Math.random() - 0.5) * 200
+        star.position.y = (Math.random() - 0.5) * 200
+        star.position.z = (Math.random() - 0.5) * 200
+
+        scene.add(star)
       }
-
-      starGeometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(positions, 3)
-      )
-
-      const starMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.7
-      })
-
-      const stars = new THREE.Points(starGeometry, starMaterial)
-      scene.add(stars)
     }
-    createStars();
+
+    createStars()
+
     //light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.005)
     scene.add(ambientLight)
@@ -66,7 +64,7 @@ export default function App() {
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     //renderer
-    
+
     function animate() {
 
 
